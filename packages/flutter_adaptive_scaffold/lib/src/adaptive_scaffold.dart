@@ -251,7 +251,11 @@ class AdaptiveScaffold extends StatefulWidget {
 
   // Builder for the custom navigation rail.
   /// [NavigationDestination]
-  final Widget Function(List<NavigationDestination> destinations)? customNavigationDestinationBuilder;
+  final Widget Function(
+    BuildContext context,
+    List<NavigationDestination> destinations,
+    BoxConstraints constraints,
+  )? customNavigationDestinationBuilder;
 
   // Widget fro the [NavigationRail] at the small breakpoint.
   /// [NavigationDestination]
@@ -339,7 +343,11 @@ class AdaptiveScaffold extends StatefulWidget {
 
   /// Creates a Custom Navigation Rail [NavigationRail]
   static Builder customNavigationRail({
-    required Widget Function(List<NavigationDestination>)? customNavigationDestinationBuilder,
+    required Widget Function(
+      BuildContext context,
+      List<NavigationDestination> destinations,
+      BoxConstraints constraints,
+    )? customNavigationDestinationBuilder,
     required EdgeInsetsGeometry padding,
     required List<NavigationDestination> destinations,
     double width = 72,
@@ -361,7 +369,7 @@ class AdaptiveScaffold extends StatefulWidget {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minHeight: constraints.maxHeight),
                     child: IntrinsicHeight(
-                      child: customNavigationDestinationBuilder!(destinations),
+                      child: customNavigationDestinationBuilder!(context, destinations, constraints),
                     ),
                   ),
                 );
