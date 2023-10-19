@@ -105,7 +105,7 @@ class AdaptiveScaffold extends StatefulWidget {
     this.mediumBreakpointPadding,
     this.largeBreakpointPadding,
     this.customNavigationDestinationBuilder,
-    required this.customNavigationDestination,
+    this.customNavigationDestination,
   });
 
   /// The destinations to be used in navigation items. These are converted to
@@ -255,7 +255,7 @@ class AdaptiveScaffold extends StatefulWidget {
 
   // Widget fro the [NavigationRail] at the small breakpoint.
   /// [NavigationDestination]
-  final Widget customNavigationDestination;
+  final Widget? customNavigationDestination;
 
   /// Callback function for when the index of a [NavigationRail] changes.
   static WidgetBuilder emptyBuilder = (_) => const SizedBox();
@@ -559,16 +559,15 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
           : null,
       drawer: widget.drawerBreakpoint.isActive(context) && widget.useDrawer
           ? Drawer(
-              child: widget.customNavigationDestinationBuilder != null
-                  ? widget.customNavigationDestination
-                  : NavigationRail(
-                      extended: true,
-                      leading: widget.leadingExtendedNavRail,
-                      trailing: widget.trailingNavRail,
-                      selectedIndex: widget.selectedIndex,
-                      destinations: widget.destinations.map((_) => AdaptiveScaffold.toRailDestination(_)).toList(),
-                      onDestinationSelected: widget.onSelectedIndexChange,
-                    ),
+              child: widget.customNavigationDestination ??
+                  NavigationRail(
+                    extended: true,
+                    leading: widget.leadingExtendedNavRail,
+                    trailing: widget.trailingNavRail,
+                    selectedIndex: widget.selectedIndex,
+                    destinations: widget.destinations.map((_) => AdaptiveScaffold.toRailDestination(_)).toList(),
+                    onDestinationSelected: widget.onSelectedIndexChange,
+                  ),
             )
           : null,
       body: AdaptiveLayout(
