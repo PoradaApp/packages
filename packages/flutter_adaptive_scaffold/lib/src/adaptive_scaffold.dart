@@ -345,30 +345,32 @@ class AdaptiveScaffold extends StatefulWidget {
     double width = 72,
     bool extended = false,
   }) {
-    return Builder(builder: (BuildContext context) {
-      if (extended && width == 72) {
-        width = 192;
-      }
-      return Padding(
-        padding: padding,
-        child: SizedBox(
-          width: width,
-          height: MediaQuery.of(context).size.height,
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    child: customNavigationDestinationBuilder!(destinations),
+    return Builder(
+      builder: (BuildContext context) {
+        if (extended && width == 72) {
+          width = 192;
+        }
+        return Padding(
+          padding: padding,
+          child: SizedBox(
+            width: width,
+            height: MediaQuery.of(context).size.height,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: IntrinsicHeight(
+                      child: customNavigationDestinationBuilder!(destinations),
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   /// Public helper method to be used for creating a [BottomNavigationBar] from
@@ -607,7 +609,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                       customNavigationDestinationBuilder: widget.customNavigationDestinationBuilder,
                       padding: widget.largeBreakpointPadding ?? const EdgeInsets.all(8),
                       destinations: widget.destinations,
-                      width: widget.navigationRailWidth,
+                      width: widget.extendedNavigationRailWidth,
                       extended: true,
                     )
                   : AdaptiveScaffold.standardNavigationRail(
