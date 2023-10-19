@@ -104,6 +104,7 @@ class AdaptiveScaffold extends StatefulWidget {
     this.appBarBreakpoint,
     this.mediumBreakpointPadding,
     this.largeBreakpointPadding,
+    this.customNavigationDestinationBuilder,
   });
 
   /// The destinations to be used in navigation items. These are converted to
@@ -247,6 +248,10 @@ class AdaptiveScaffold extends StatefulWidget {
   /// [Breakpoint]
   final EdgeInsets? largeBreakpointPadding;
 
+  // Widget for the a [NavigationDestination]
+  /// [NavigationDestination]
+  final Widget Function(List<NavigationDestination> destinations)? customNavigationDestinationBuilder;
+
   /// Callback function for when the index of a [NavigationRail] changes.
   static WidgetBuilder emptyBuilder = (_) => const SizedBox();
 
@@ -288,7 +293,57 @@ class AdaptiveScaffold extends StatefulWidget {
     if (extended && width == 72) {
       width = 192;
     }
+    return Builder(
+      builder: (BuildContext context) {
+        return Padding(
+          padding: padding,
+          child: SizedBox(
+            width: width,
+            height: MediaQuery.of(context).size.height,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: IntrinsicHeight(
+                      child: NavigationRail(
+                        labelType: labelType,
+                        leading: leading,
+                        trailing: trailing,
+                        onDestinationSelected: onDestinationSelected,
+                        groupAlignment: groupAlignment,
+                        backgroundColor: backgroundColor,
+                        extended: extended,
+                        selectedIndex: selectedIndex,
+                        selectedIconTheme: selectedIconTheme,
+                        unselectedIconTheme: unselectedIconTheme,
+                        selectedLabelTextStyle: selectedLabelTextStyle,
+                        unselectedLabelTextStyle: unSelectedLabelTextStyle,
+                        destinations: destinations,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Creates a Custom Navigation Rail [NavigationRail]
+  static Builder customNavigationRail({
+    required Widget Function(List<NavigationDestination>)? customNavigationDestinationBuilder,
+    required EdgeInsetsGeometry padding,
+    required List<NavigationDestination> destinations,
+    double width = 72,
+    bool extended = false,
+  }) {
     return Builder(builder: (BuildContext context) {
+      if (extended && width == 72) {
+        width = 192;
+      }
       return Padding(
         padding: padding,
         child: SizedBox(
@@ -300,21 +355,7 @@ class AdaptiveScaffold extends StatefulWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
-                    child: NavigationRail(
-                      labelType: labelType,
-                      leading: leading,
-                      trailing: trailing,
-                      onDestinationSelected: onDestinationSelected,
-                      groupAlignment: groupAlignment,
-                      backgroundColor: backgroundColor,
-                      extended: extended,
-                      selectedIndex: selectedIndex,
-                      selectedIconTheme: selectedIconTheme,
-                      unselectedIconTheme: unselectedIconTheme,
-                      selectedLabelTextStyle: selectedLabelTextStyle,
-                      unselectedLabelTextStyle: unSelectedLabelTextStyle,
-                      destinations: destinations,
-                    ),
+                    child: customNavigationDestinationBuilder!(destinations),
                   ),
                 ),
               );
@@ -531,38 +572,53 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
           config: <Breakpoint, SlotLayoutConfig>{
             widget.mediumBreakpoint: SlotLayout.from(
               key: const Key('primaryNavigation'),
-              builder: (_) => AdaptiveScaffold.standardNavigationRail(
-                width: widget.navigationRailWidth,
-                leading: widget.leadingUnextendedNavRail,
-                trailing: widget.trailingNavRail,
-                selectedIndex: widget.selectedIndex,
-                destinations: widget.destinations.map((_) => AdaptiveScaffold.toRailDestination(_)).toList(),
-                onDestinationSelected: widget.onSelectedIndexChange,
-                backgroundColor: navRailTheme.backgroundColor,
-                selectedIconTheme: navRailTheme.selectedIconTheme,
-                unselectedIconTheme: navRailTheme.unselectedIconTheme,
-                selectedLabelTextStyle: navRailTheme.selectedLabelTextStyle,
-                unSelectedLabelTextStyle: navRailTheme.unselectedLabelTextStyle,
-                padding: widget.mediumBreakpointPadding ?? const EdgeInsets.all(8),
-              ),
+              builder: (_) => widget.customNavigationDestinationBuilder != null
+                  ? AdaptiveScaffold.customNavigationRail(
+                      customNavigationDestinationBuilder: widget.customNavigationDestinationBuilder,
+                      padding: widget.mediumBreakpointPadding ?? const EdgeInsets.all(8),
+                      destinations: widget.destinations,
+                      width: widget.navigationRailWidth,
+                    )
+                  : AdaptiveScaffold.standardNavigationRail(
+                      width: widget.navigationRailWidth,
+                      leading: widget.leadingUnextendedNavRail,
+                      trailing: widget.trailingNavRail,
+                      selectedIndex: widget.selectedIndex,
+                      destinations: widget.destinations.map((_) => AdaptiveScaffold.toRailDestination(_)).toList(),
+                      onDestinationSelected: widget.onSelectedIndexChange,
+                      backgroundColor: navRailTheme.backgroundColor,
+                      selectedIconTheme: navRailTheme.selectedIconTheme,
+                      unselectedIconTheme: navRailTheme.unselectedIconTheme,
+                      selectedLabelTextStyle: navRailTheme.selectedLabelTextStyle,
+                      unSelectedLabelTextStyle: navRailTheme.unselectedLabelTextStyle,
+                      padding: widget.mediumBreakpointPadding ?? const EdgeInsets.all(8),
+                    ),
             ),
             widget.largeBreakpoint: SlotLayout.from(
               key: const Key('primaryNavigation1'),
-              builder: (_) => AdaptiveScaffold.standardNavigationRail(
-                width: widget.extendedNavigationRailWidth,
-                extended: true,
-                leading: widget.leadingExtendedNavRail,
-                trailing: widget.trailingNavRail,
-                selectedIndex: widget.selectedIndex,
-                destinations: widget.destinations.map((_) => AdaptiveScaffold.toRailDestination(_)).toList(),
-                onDestinationSelected: widget.onSelectedIndexChange,
-                backgroundColor: navRailTheme.backgroundColor,
-                selectedIconTheme: navRailTheme.selectedIconTheme,
-                unselectedIconTheme: navRailTheme.unselectedIconTheme,
-                selectedLabelTextStyle: navRailTheme.selectedLabelTextStyle,
-                unSelectedLabelTextStyle: navRailTheme.unselectedLabelTextStyle,
-                padding: widget.largeBreakpointPadding ?? const EdgeInsets.all(8),
-              ),
+              builder: (_) => widget.customNavigationDestinationBuilder != null
+                  ? AdaptiveScaffold.customNavigationRail(
+                      customNavigationDestinationBuilder: widget.customNavigationDestinationBuilder,
+                      padding: widget.mediumBreakpointPadding ?? const EdgeInsets.all(8),
+                      destinations: widget.destinations,
+                      width: widget.navigationRailWidth,
+                      extended: true,
+                    )
+                  : AdaptiveScaffold.standardNavigationRail(
+                      width: widget.extendedNavigationRailWidth,
+                      extended: true,
+                      leading: widget.leadingExtendedNavRail,
+                      trailing: widget.trailingNavRail,
+                      selectedIndex: widget.selectedIndex,
+                      destinations: widget.destinations.map((_) => AdaptiveScaffold.toRailDestination(_)).toList(),
+                      onDestinationSelected: widget.onSelectedIndexChange,
+                      backgroundColor: navRailTheme.backgroundColor,
+                      selectedIconTheme: navRailTheme.selectedIconTheme,
+                      unselectedIconTheme: navRailTheme.unselectedIconTheme,
+                      selectedLabelTextStyle: navRailTheme.selectedLabelTextStyle,
+                      unSelectedLabelTextStyle: navRailTheme.unselectedLabelTextStyle,
+                      padding: widget.largeBreakpointPadding ?? const EdgeInsets.all(8),
+                    ),
             ),
           },
         ),
