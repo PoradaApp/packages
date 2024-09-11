@@ -15,15 +15,17 @@ class SlotLayout extends StatefulWidget {
   /// Creates a [SlotLayout] widget.
   const SlotLayout({required this.config, super.key});
 
-  /// Given a context and a config, it returns the [SlotLayoutConfig] that will
+  /// Given a context and a config, it returns the [SlotLayoutConfig] that will g
   /// be chosen from the config under the context's conditions.
   static SlotLayoutConfig? pickWidget(
       BuildContext context, Map<Breakpoint, SlotLayoutConfig?> config) {
-    final Breakpoint? breakpoint =
-        Breakpoint.activeBreakpointIn(context, config.keys.toList());
-    return breakpoint != null && config.containsKey(breakpoint)
-        ? config[breakpoint]
-        : null;
+    SlotLayoutConfig? chosenWidget;
+    config.forEach((Breakpoint breakpoint, SlotLayoutConfig? pickedWidget) {
+      if (breakpoint.isActive(context)) {
+        chosenWidget = pickedWidget;
+      }
+    });
+    return chosenWidget;
   }
 
   /// Maps [Breakpoint]s to [SlotLayoutConfig]s to determine what Widget to
@@ -72,14 +74,12 @@ class SlotLayout extends StatefulWidget {
     WidgetBuilder? builder,
     Widget Function(Widget, Animation<double>)? inAnimation,
     Widget Function(Widget, Animation<double>)? outAnimation,
-    Duration? duration,
     required Key key,
   }) =>
       SlotLayoutConfig._(
         builder: builder,
         inAnimation: inAnimation,
         outAnimation: outAnimation,
-        duration: duration,
         key: key,
       );
 
@@ -96,7 +96,7 @@ class _SlotLayoutState extends State<SlotLayout>
     chosenWidget = SlotLayout.pickWidget(context, widget.config);
     bool hasAnimation = false;
     return AnimatedSwitcher(
-        duration: chosenWidget?.duration ?? const Duration(milliseconds: 1000),
+        duration: const Duration(milliseconds: 1000),
         layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
           final Stack elements = Stack(
             children: <Widget>[
@@ -137,7 +137,6 @@ class SlotLayoutConfig extends StatelessWidget {
     required this.builder,
     this.inAnimation,
     this.outAnimation,
-    this.duration,
   });
 
   /// The child Widget that [SlotLayout] eventually returns with an animation.
@@ -160,9 +159,6 @@ class SlotLayoutConfig extends StatelessWidget {
   ///  * [AnimatedWidget] and [ImplicitlyAnimatedWidget], which are commonly used
   ///   as the returned widget.
   final Widget Function(Widget, Animation<double>)? outAnimation;
-
-  /// The amount of time taken by the execution of the in and out animations.
-  final Duration? duration;
 
   /// An empty [SlotLayoutConfig] to be placed in a slot to indicate that the slot
   /// should show nothing.
