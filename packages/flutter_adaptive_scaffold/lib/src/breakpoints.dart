@@ -26,12 +26,10 @@ class Breakpoints {
   static const Breakpoint smallAndUp = Breakpoint.small(andUp: true);
 
   /// A desktop screen whose width is less than 600 dp and greater than 0 dp.
-  static const Breakpoint smallDesktop =
-      Breakpoint.small(platform: Breakpoint.desktop);
+  static const Breakpoint smallDesktop = Breakpoint.small(platform: Breakpoint.desktop);
 
   /// A mobile screen whose width is less than 600 dp and greater than 0 dp.
-  static const Breakpoint smallMobile =
-      Breakpoint.small(platform: Breakpoint.mobile);
+  static const Breakpoint smallMobile = Breakpoint.small(platform: Breakpoint.mobile);
 
   /// A window whose width is between 600 dp and 840 dp.
   static const Breakpoint medium = Breakpoint.medium();
@@ -40,27 +38,22 @@ class Breakpoints {
   static const Breakpoint mediumAndUp = Breakpoint.medium(andUp: true);
 
   /// A desktop window whose width is between 600 dp and 840 dp.
-  static const Breakpoint mediumDesktop =
-      Breakpoint.medium(platform: Breakpoint.desktop);
+  static const Breakpoint mediumDesktop = Breakpoint.medium(platform: Breakpoint.desktop);
 
   /// A mobile window whose width is between 600 dp and 840 dp.
-  static const Breakpoint mediumMobile =
-      Breakpoint.medium(platform: Breakpoint.mobile);
+  static const Breakpoint mediumMobile = Breakpoint.medium(platform: Breakpoint.mobile);
 
   /// A window whose width is between 840 dp and 1200 dp.
   static const Breakpoint mediumLarge = Breakpoint.mediumLarge();
 
   /// A window whose width is greater than 840 dp.
-  static const Breakpoint mediumLargeAndUp =
-      Breakpoint.mediumLarge(andUp: true);
+  static const Breakpoint mediumLargeAndUp = Breakpoint.mediumLarge(andUp: true);
 
   /// A desktop window whose width is between 840 dp and 1200 dp.
-  static const Breakpoint mediumLargeDesktop =
-      Breakpoint.mediumLarge(platform: Breakpoint.desktop);
+  static const Breakpoint mediumLargeDesktop = Breakpoint.mediumLarge(platform: Breakpoint.desktop);
 
   /// A mobile window whose width is between 840 dp and 1200 dp.
-  static const Breakpoint mediumLargeMobile =
-      Breakpoint.mediumLarge(platform: Breakpoint.mobile);
+  static const Breakpoint mediumLargeMobile = Breakpoint.mediumLarge(platform: Breakpoint.mobile);
 
   /// A window whose width is between 1200 dp and 1600 dp.
   static const Breakpoint large = Breakpoint.large();
@@ -69,23 +62,19 @@ class Breakpoints {
   static const Breakpoint largeAndUp = Breakpoint.large(andUp: true);
 
   /// A desktop window whose width is between 1200 dp and 1600 dp.
-  static const Breakpoint largeDesktop =
-      Breakpoint.large(platform: Breakpoint.desktop);
+  static const Breakpoint largeDesktop = Breakpoint.large(platform: Breakpoint.desktop);
 
   /// A mobile window whose width is between 1200 dp and 1600 dp.
-  static const Breakpoint largeMobile =
-      Breakpoint.large(platform: Breakpoint.mobile);
+  static const Breakpoint largeMobile = Breakpoint.large(platform: Breakpoint.mobile);
 
   /// A window whose width is greater than 1600 dp.
   static const Breakpoint extraLarge = Breakpoint.extraLarge();
 
   /// A desktop window whose width is greater than 1600 dp.
-  static const Breakpoint extraLargeDesktop =
-      Breakpoint.extraLarge(platform: Breakpoint.desktop);
+  static const Breakpoint extraLargeDesktop = Breakpoint.extraLarge(platform: Breakpoint.desktop);
 
   /// A mobile window whose width is greater than 1600 dp.
-  static const Breakpoint extraLargeMobile =
-      Breakpoint.extraLarge(platform: Breakpoint.mobile);
+  static const Breakpoint extraLargeMobile = Breakpoint.extraLarge(platform: Breakpoint.mobile);
 
   /// A list of all the standard breakpoints.
   static const List<Breakpoint> all = <Breakpoint>[
@@ -292,9 +281,7 @@ class Breakpoint {
     final double lowerBoundHeight = beginHeight ?? double.negativeInfinity;
     final double upperBoundHeight = endHeight ?? double.infinity;
 
-    final bool isWidthActive = andUp
-        ? width >= lowerBoundWidth
-        : width >= lowerBoundWidth && width < upperBoundWidth;
+    final bool isWidthActive = andUp ? width >= lowerBoundWidth : width >= lowerBoundWidth && width < upperBoundWidth;
 
     final bool isHeightActive = isPortrait || isWidthActive || andUp
         ? isWidthActive || height >= lowerBoundHeight
@@ -306,12 +293,9 @@ class Breakpoint {
   /// Returns the currently active [Breakpoint] based on the [SlotLayout] in the
   /// context.
   static Breakpoint? maybeActiveBreakpointFromSlotLayout(BuildContext context) {
-    final SlotLayout? slotLayout =
-        context.findAncestorWidgetOfExactType<SlotLayout>();
+    final SlotLayout? slotLayout = context.findAncestorWidgetOfExactType<SlotLayout>();
 
-    return slotLayout != null
-        ? activeBreakpointIn(context, slotLayout.config.keys.toList())
-        : null;
+    return slotLayout != null ? activeBreakpointIn(context, slotLayout.config.keys.toList()) : null;
   }
 
   /// Returns the default [Breakpoint] based on the [BuildContext].
@@ -321,14 +305,12 @@ class Breakpoint {
 
   /// Returns the currently active [Breakpoint].
   static Breakpoint activeBreakpointOf(BuildContext context) {
-    return maybeActiveBreakpointFromSlotLayout(context) ??
-        defaultBreakpointOf(context);
+    return maybeActiveBreakpointFromSlotLayout(context) ?? defaultBreakpointOf(context);
   }
 
   /// Returns the currently active [Breakpoint] based on the [BuildContext] and
   /// a list of [Breakpoint]s.
-  static Breakpoint? activeBreakpointIn(
-      BuildContext context, List<Breakpoint> breakpoints) {
+  static Breakpoint? activeBreakpointIn(BuildContext context, List<Breakpoint> breakpoints) {
     Breakpoint? currentBreakpoint;
 
     for (final Breakpoint breakpoint in breakpoints) {
@@ -360,14 +342,10 @@ class Breakpoint {
   bool operator >(Breakpoint breakpoint)
   // #enddocregion Breakpoint operators
   {
-    return (beginWidth ?? double.negativeInfinity) >
-            (breakpoint.beginWidth ?? double.negativeInfinity) &&
-        (endWidth ?? double.infinity) >
-            (breakpoint.endWidth ?? double.infinity) &&
-        (beginHeight ?? double.negativeInfinity) >
-            (breakpoint.beginHeight ?? double.negativeInfinity) &&
-        (endHeight ?? double.infinity) >
-            (breakpoint.endHeight ?? double.infinity);
+    return (beginWidth ?? double.negativeInfinity) > (breakpoint.beginWidth ?? double.negativeInfinity) &&
+        (endWidth ?? double.infinity) > (breakpoint.endWidth ?? double.infinity) &&
+        (beginHeight ?? double.negativeInfinity) > (breakpoint.beginHeight ?? double.negativeInfinity) &&
+        (endHeight ?? double.infinity) > (breakpoint.endHeight ?? double.infinity);
   }
 
   // #docregion Breakpoint operators
@@ -375,14 +353,10 @@ class Breakpoint {
   bool operator <(Breakpoint breakpoint)
   // #enddocregion Breakpoint operators
   {
-    return (endWidth ?? double.infinity) <
-            (breakpoint.endWidth ?? double.infinity) &&
-        (beginWidth ?? double.negativeInfinity) <
-            (breakpoint.beginWidth ?? double.negativeInfinity) &&
-        (endHeight ?? double.infinity) <
-            (breakpoint.endHeight ?? double.infinity) &&
-        (beginHeight ?? double.negativeInfinity) <
-            (breakpoint.beginHeight ?? double.negativeInfinity);
+    return (endWidth ?? double.infinity) < (breakpoint.endWidth ?? double.infinity) &&
+        (beginWidth ?? double.negativeInfinity) < (breakpoint.beginWidth ?? double.negativeInfinity) &&
+        (endHeight ?? double.infinity) < (breakpoint.endHeight ?? double.infinity) &&
+        (beginHeight ?? double.negativeInfinity) < (breakpoint.beginHeight ?? double.negativeInfinity);
   }
 
   // #docregion Breakpoint operators
@@ -391,14 +365,10 @@ class Breakpoint {
   bool operator >=(Breakpoint breakpoint)
   // #enddocregion Breakpoint operators
   {
-    return (beginWidth ?? double.negativeInfinity) >=
-            (breakpoint.beginWidth ?? double.negativeInfinity) &&
-        (endWidth ?? double.infinity) >=
-            (breakpoint.endWidth ?? double.infinity) &&
-        (beginHeight ?? double.negativeInfinity) >=
-            (breakpoint.beginHeight ?? double.negativeInfinity) &&
-        (endHeight ?? double.infinity) >=
-            (breakpoint.endHeight ?? double.infinity);
+    return (beginWidth ?? double.negativeInfinity) >= (breakpoint.beginWidth ?? double.negativeInfinity) &&
+        (endWidth ?? double.infinity) >= (breakpoint.endWidth ?? double.infinity) &&
+        (beginHeight ?? double.negativeInfinity) >= (breakpoint.beginHeight ?? double.negativeInfinity) &&
+        (endHeight ?? double.infinity) >= (breakpoint.endHeight ?? double.infinity);
   }
 
   // #docregion Breakpoint operators
@@ -407,14 +377,10 @@ class Breakpoint {
   bool operator <=(Breakpoint breakpoint)
   // #enddocregion Breakpoint operators
   {
-    return (endWidth ?? double.infinity) <=
-            (breakpoint.endWidth ?? double.infinity) &&
-        (beginWidth ?? double.negativeInfinity) <=
-            (breakpoint.beginWidth ?? double.negativeInfinity) &&
-        (endHeight ?? double.infinity) <=
-            (breakpoint.endHeight ?? double.infinity) &&
-        (beginHeight ?? double.negativeInfinity) <=
-            (breakpoint.beginHeight ?? double.negativeInfinity);
+    return (endWidth ?? double.infinity) <= (breakpoint.endWidth ?? double.infinity) &&
+        (beginWidth ?? double.negativeInfinity) <= (breakpoint.beginWidth ?? double.negativeInfinity) &&
+        (endHeight ?? double.infinity) <= (breakpoint.endHeight ?? double.infinity) &&
+        (beginHeight ?? double.negativeInfinity) <= (breakpoint.beginHeight ?? double.negativeInfinity);
   }
 
   // #docregion Breakpoint operators
